@@ -4,6 +4,12 @@ const cleanCache = require('../middlewares/cleanCache');
 
 const Blog = mongoose.model('Blog');
 
+const dummyMiddleware = (req, res, next) => {
+
+  console.log("dummy middleware is being executed.");
+  next();
+}
+
 module.exports = app => {
   app.get('/api/blogs/:id', requireLogin, async (req, res) => {
     const blog = await Blog.findOne({
@@ -14,7 +20,7 @@ module.exports = app => {
     res.send(blog);
   });
 
-  app.get('/api/blogs', requireLogin, async (req, res) => {
+  app.get('/api/blogs', dummyMiddleware, requireLogin, async (req, res) => {
     const blogs = await Blog.find({ _user: req.user.id }).cache({
       key: req.user.id
     });
